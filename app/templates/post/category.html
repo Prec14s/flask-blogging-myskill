@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Kategori: {{ category.name }}{% endblock %}
+
+{% block content %}
+<div class="m-5">
+    <p class="text-sm text-gray-500">Kategori</p>
+    <h1 class="text-3xl font-bold text-gray-900">{{ category.name }}</h1>
+    <p class="mt-1 text-sm text-gray-500">{{ posts|length }} artikel</p>
+</div>
+
+{% include 'posts.html' %}
+{% endblock %}

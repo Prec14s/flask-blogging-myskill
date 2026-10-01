@@ -1,0 +1,128 @@
+
+<style>
+    .sidebar-bg {
+        background: linear-gradient(180deg, #0f172a 0%, #1e1b4b 100%);
+    }
+    .avatar-ring {
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899);
+        animation: putar-warna 6s linear infinite;
+        background-size: 200% 200%;
+    }
+    @keyframes putar-warna {
+        0%   { background-position: 0% 50%; }
+        50%  { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    .menu-link {
+        transition: all 0.2s ease;
+    }
+    .menu-link:hover {
+        transform: translateX(4px);
+    }
+</style>
+
+<aside id="sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen sidebar-bg shadow-2xl" aria-label="Sidebar">
+    <div class="flex flex-col h-full px-4 py-6 overflow-y-auto">
+
+        <!-- Logo -->
+        <div class="flex items-center gap-2 px-2 mb-6">
+            <div class="flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 text-white font-bold">
+                F
+            </div>
+            <span class="text-lg font-bold text-white tracking-wide">Flask Blog</span>
+        </div>
+
+        <!-- Kartu profil -->
+        <div class="flex items-center gap-3 p-3 mb-6 rounded-xl bg-white/5 border border-white/10">
+            <div class="p-0.5 rounded-full avatar-ring">
+                <div class="flex items-center justify-center w-10 h-10 rounded-full bg-slate-900 text-white font-semibold">
+                    {{ (session.get('username') or 'G')[0]|upper }}
+                </div>
+            </div>
+            <div class="min-w-0">
+                <p class="text-xs text-gray-400">Hello,</p>
+                <p class="text-sm font-semibold text-white truncate">{{ session.get('username', 'Guest') }}!</p>
+            </div>
+        </div>
+
+        <!-- Menu utama -->
+        <p class="px-2 mb-2 text-xs font-semibold tracking-wider text-gray-500 uppercase">Menu</p>
+        <ul class="space-y-1 font-medium">
+            <li>
+                <a href="{{ url_for('public.home') }}"
+                   class="menu-link flex items-center p-2.5 rounded-lg group
+                   {% if request.endpoint == 'public.home' %}bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg{% else %}text-gray-300 hover:bg-white/10 hover:text-white{% endif %}">
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                    </svg>
+                    <span class="ms-3">Home</span>
+                </a>
+            </li>
+                 <li>
+   {% if session.get('user_id') %}
+<li>
+    <a href="{{ url_for('post.create') }}"
+       class="menu-link flex items-center p-2.5 rounded-lg group
+       {% if request.endpoint == 'post.create' %}bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg{% else %}text-gray-300 hover:bg-white/10 hover:text-white{% endif %}">
+        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 5v10M5 10h10"/>
+        </svg>
+        <span class="ms-3">Create Post</span>
+    </a>
+</li>
+{% endif %}
+            
+        </ul>
+{% if session.get('user_id') %}
+        <!-- Pembatas Categories -->
+         
+        <div class="flex items-center my-6">
+            <div class="flex-grow border-t border-white/10"></div>
+            <span class="flex items-center gap-2 px-3 text-xs font-semibold tracking-wider text-gray-400 uppercase">
+                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+                </svg>
+                Categories
+            </span>
+            <div class="flex-grow border-t border-white/10"></div>
+        </div>
+        {% endif %}
+
+        <!-- Daftar kategori -->
+       <!-- Daftar kategori -->
+       
+{% set warna = ['emerald', 'amber', 'pink', 'sky', 'violet', 'orange'] %}
+
+<ul class="space-y-1 font-medium">
+    {% for c in sidebar_categories %}
+        {% set w = warna[loop.index0 % warna|length] %}
+        {% set aktif = request.endpoint == 'post.category' and request.view_args.get('category_id') == c.id %}
+         {% if session.get('user_id') %}
+        <li>
+            <a href="{{ url_for('post.category', category_id=c.id) }}"
+               class="menu-link flex items-center justify-between p-2.5 text-sm rounded-lg
+               {% if aktif %}bg-white/15 text-white{% else %}text-gray-300 hover:bg-white/10 hover:text-white{% endif %}">
+                <span class="flex items-center gap-3">
+                    <span class="w-2.5 h-2.5 rounded-full bg-{{ w }}-400 shadow-[0_0_8px] shadow-{{ w }}-400"></span>
+                    {{ c.name }}
+                </span>
+                <span class="px-2 py-0.5 text-xs rounded-full bg-white/10 text-gray-300">{{ c.posts|length }}</span>
+            </a>
+        </li>
+        {% endif %}
+    {% else %}
+        <li class="px-2.5 text-sm text-gray-500">Belum ada kategori.</li>
+    {% endfor %}
+</ul>
+       
+        </ul>
+
+        <!-- Footer -->
+        <div class="pt-4 mt-auto text-center border-t border-white/10">
+           
+            <p class="text-sm font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-pink-400">@Putra Rivaldo</p>
+        </div>
+
+    </div>
+    
+</aside>

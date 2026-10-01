@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl m-5">
+
+    <a href="{{ url_for('public.home') }}" class="inline-flex items-center mb-4 text-sm font-medium text-blue-600 hover:underline">
+        <svg class="w-3.5 h-3.5 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5H1m0 0 4 4M1 5l4-4"/>
+        </svg>
+        Kembali ke Home
+    </a>
+
+    <article class="p-8 bg-white border border-gray-200 rounded-lg shadow">
+
+        {% if post.categories %}
+            <div class="flex flex-wrap gap-2 mb-4">
+                {% for category in post.categories %}
+                    <span class="px-2.5 py-0.5 text-xs font-medium text-blue-800 bg-blue-100 rounded">{{ category.name }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <h1 class="mb-2 text-3xl font-bold tracking-tight text-gray-900">{{ post.title }}</h1>
+
+        <div class="flex items-center gap-3 pb-4 mb-6 border-b border-gray-200">
+            <div class="flex items-center justify-center w-9 h-9 text-sm font-semibold text-white rounded-full bg-gradient-to-br from-blue-500 to-purple-600">
+                {{ post.user.username[0]|upper }}
+            </div>
+            <p class="text-sm text-gray-600">oleh <span class="font-semibold text-gray-900">{{ post.user.username }}</span></p>
+        </div>
+
+        <div class="leading-relaxed text-gray-700 whitespace-pre-line">{{ post.body }}</div>
+
+        {% if session.get('user_id') == post.user_id %}
+        <div class="pt-6 mt-8 border-t border-gray-200">
+            <form method="POST" action="{{ url_for('post.delete', post_id=post.id) }}"
+                  onsubmit="return confirm('Yakin ingin menghapus postingan ini?')">
+                <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700">
+                    Hapus Postingan
+                </button>
+            </form>
+        </div>
+        {% endif %}
+    </article>
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+<div>
+    <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title</label>
+    <input type="text" name="title" id="title" required
+           value="{{ post.title if post else '' }}"
+           class="w-full p-2.5 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+           placeholder="Judul postingan">
+</div>
+
+<div>
+    <label for="body" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Konten</label>
+    <textarea name="body" id="body" rows="6" required
+              class="w-full p-2.5 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Tulis isi postingan...">{{ post.body if post else '' }}</textarea>
+</div>
+
+<div>
+    <p class="mb-2 text-sm font-medium text-gray-900 dark:text-white">Categories</p>
+    {% if categories %}
+        <div class="flex flex-wrap gap-2">
+            {% for category in categories %}
+                <label class="inline-flex items-center gap-2 px-3 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 has-[:checked]:bg-blue-50 has-[:checked]:border-blue-500 has-[:checked]:text-blue-700">
+                    <input type="checkbox" name="categories" value="{{ category.id }}"
+                           class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                           {% if post and category in post.categories %}checked{% endif %}>
+                    {{ category.name }}
+                </label>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-sm text-gray-500">Belum ada kategori.</p>
+    {% endif %}
+</div>
+
+<button type="submit"
+        class="w-full px-5 py-2.5 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300">
+    Simpan
+</button>

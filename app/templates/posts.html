@@ -1,0 +1,42 @@
+{% for post in posts %}
+    <div class="p-6 m-5 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+
+        {% if post.categories %}
+            <div class="flex flex-wrap gap-2 mb-3">
+                {% for category in post.categories %}
+                    <span class="px-2.5 py-0.5 text-xs font-medium text-blue-800 bg-blue-100 rounded">{{ category.name }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <h5 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ post.title }}</h5>
+        <p class="mb-3 text-xs text-gray-500 dark:text-gray-400">oleh {{ post.user.username }}</p>
+        <p class="mb-4 font-normal text-gray-700 dark:text-gray-400">{{ post.body|truncate(150) }}</p>
+<div class="flex items-center gap-2">
+    <a href="{{ url_for('post.detail', post_id=post.id) }}"
+       class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800">
+        Read more
+        <svg class="w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+        </svg>
+    </a>
+
+    {% if session.get('user_id') == post.user_id %}
+        
+    {% endif %}
+</div>
+        {% if session.get('user_id') == post.user_id %}
+        <form method="POST" action="{{ url_for('post.delete', post_id=post.id) }}"
+              onsubmit="return confirm('Yakin ingin menghapus postingan ini?')">
+            <button type="submit" class="px-3 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700">
+                Hapus
+            </button>
+        </form>
+        {% endif %}
+    </div>
+{% else %}
+    <div class="p-6 m-5 text-center text-gray-500 bg-white border border-gray-200 rounded-lg">
+        Belum ada postingan.
+        <a href="{{ url_for('post.create') }}" class="font-medium text-blue-600 hover:underline">Buat postingan pertama</a>
+    </div>
+{% endfor %}
